@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { stories } from '@/data/stories'
 import { dbGetAll } from '@/lib/db'
+import { playTap } from '@/lib/sounds'
+import { PageTransition, TapCard, StaggerItem } from '@/components/MotionWrapper'
 
 export default function StoriesPage() {
   const [readIds, setReadIds] = useState<Set<string>>(new Set())

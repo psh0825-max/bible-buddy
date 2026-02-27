@@ -56,9 +56,10 @@ body {
 /* ===== BUTTONS ===== */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  padding: 14px 28px;
+  padding: 16px 32px;
   border-radius: 16px;
-  font-size: 17px;
+  font-size: 18px;
+  min-height: 56px;
   font-weight: 700;
   border: none;
   cursor: pointer;
@@ -92,8 +93,8 @@ body {
   border: 2px solid var(--sky);
   color: var(--sky);
 }
-.btn-sm { padding: 10px 20px; font-size: 15px; border-radius: 12px; }
-.btn-lg { padding: 18px 36px; font-size: 20px; border-radius: 20px; }
+.btn-sm { padding: 12px 22px; font-size: 16px; border-radius: 12px; min-height: 48px; }
+.btn-lg { padding: 20px 40px; font-size: 22px; border-radius: 20px; min-height: 64px; }
 .btn-block { width: 100%; }
 
 /* ===== BADGES ===== */
@@ -164,11 +165,12 @@ body {
 .nav-item {
   flex: 1;
   display: flex; flex-direction: column; align-items: center; gap: 2px;
-  padding: 8px 4px;
+  padding: 10px 4px;
   border-radius: 16px;
   text-decoration: none;
   color: var(--text-light);
   font-size: 11px;
+  min-height: 52px;
   font-weight: 600;
   transition: all 0.2s;
   position: relative;
@@ -243,10 +245,11 @@ body {
 /* ===== VERSE CARD ===== */
 .verse-word {
   display: inline-block;
-  padding: 6px 14px;
+  padding: 10px 16px;
   margin: 4px;
-  border-radius: 12px;
-  font-size: 16px;
+  border-radius: 14px;
+  font-size: 17px;
+  min-height: 44px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;

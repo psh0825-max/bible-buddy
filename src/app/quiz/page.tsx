@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { stories } from '@/data/stories'
 import { quizzes, Quiz } from '@/data/quizzes'
 import { dbPut, dbGetAll } from '@/lib/db'
+import { playCorrect, playWrong, playComplete, playTap } from '@/lib/sounds'
 import Confetti from '@/components/Confetti'
 
 type Phase = 'select' | 'playing' | 'result'
@@ -45,9 +46,9 @@ export default function QuizPage() {
     setSelectedAnswer(answer)
     const q = currentQuizzes[currentIndex]
     if (q.type === 'blank') {
-      if (blankInput.trim() === q.answer) setScore(s => s + 1)
+      if (blankInput.trim() === q.answer) { setScore(s => s + 1); playCorrect() } else { playWrong() }
     } else {
-      if (answer === q.answer) setScore(s => s + 1)
+      if (answer === q.answer) { setScore(s => s + 1); playCorrect() } else { playWrong() }
     }
   }
 
@@ -55,7 +56,7 @@ export default function QuizPage() {
     if (currentIndex + 1 >= currentQuizzes.length) {
       const finalScore = score
       dbPut('quizScores', { storyId: selectedStory, score: finalScore, totalQuestions: currentQuizzes.length, completedAt: new Date().toISOString() })
-      if (finalScore === currentQuizzes.length) setShowConfetti(true)
+      if (finalScore === currentQuizzes.length) { setShowConfetti(true); playComplete() } else { playTap() }
       setPhase('result')
       return
     }

@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react'
 import { verses, Verse } from '@/data/verses'
 import { dbPut, dbGet, dbGetAll, awardBadge } from '@/lib/db'
+import { playCorrect, playWrong, playComplete, playBadge, playTap } from '@/lib/sounds'
+import { CelebrationBurst } from '@/components/MotionWrapper'
 import Confetti from '@/components/Confetti'
 
 type Phase = 'list' | 'step1' | 'step2' | 'step3' | 'done'
@@ -83,13 +85,14 @@ export default function MemorizePage() {
 
   const checkStep2 = () => {
     const allCorrect = blanks.every(b => b.userWord === b.word)
-    if (allCorrect) completeStep(2)
+    if (allCorrect) { playCorrect(); completeStep(2) } else { playWrong() }
   }
 
   const handleStep3Select = (word: string, idx: number) => {
     const nextIdx = selectedWords.length
     if (word !== correctOrder[nextIdx]) {
       setStep3Wrong(true)
+      playWrong()
       setTimeout(() => setStep3Wrong(false), 500)
       return
     }
@@ -98,7 +101,7 @@ export default function MemorizePage() {
     const newShuffled = [...shuffledWords]
     newShuffled.splice(idx, 1)
     setShuffledWords(newShuffled)
-    if (newSelected.length === correctOrder.length) completeStep(3)
+    if (newSelected.length === correctOrder.length) { playComplete(); completeStep(3) }
   }
 
   const completeStep = async (step: number) => {
@@ -118,7 +121,7 @@ export default function MemorizePage() {
 
     if (step === 3) {
       setShowConfetti(true)
-      await awardBadge(`verse-${currentVerse.id}`)
+      await awardBadge(`verse-${currentVerse.id}`); playBadge()
       const allVerses = await dbGetAll<Progress>('verses')
       const completed = allVerses.filter(v => v.step >= 3).length
       if (completed >= 1) await awardBadge('first-verse')
