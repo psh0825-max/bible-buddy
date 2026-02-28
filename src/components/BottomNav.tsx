@@ -7,7 +7,7 @@ const tabs = [
   { href: '/stories', icon: '📖', label: '이야기' },
   { href: '/quiz', icon: '🎮', label: '퀴즈' },
   { href: '/memorize', icon: '💎', label: '암송' },
-  { href: '/coloring', icon: '🎨', label: '색칠' },
+  { href: '/chat', icon: '💬', label: 'AI 질문' },
   { href: '/profile', icon: '👤', label: '프로필' },
 ]
 

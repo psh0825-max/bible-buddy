@@ -119,8 +119,8 @@ export default function Home() {
               { href: '/stories', icon: '📖', label: '이야기', bg: 'var(--gold-soft)' },
               { href: '/quiz', icon: '🎮', label: '퀴즈', bg: 'var(--lavender)' },
               { href: '/memorize', icon: '💎', label: '암송', bg: 'var(--sky-light)' },
-              { href: '/coloring', icon: '🎨', label: '색칠', bg: 'var(--mint-soft)' },
               { href: '/chat', icon: '💬', label: 'AI 질문', bg: 'var(--coral-soft)' },
+              { href: '/guide', icon: '📋', label: '사용법', bg: 'var(--mint-soft)' },
               { href: '/profile', icon: '👤', label: '프로필', bg: '#F3E8FF' },
             ].map((item, i) => (
               <StaggerItem key={item.href} index={i + 6}>
