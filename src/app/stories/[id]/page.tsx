@@ -5,6 +5,7 @@ import { stories } from '@/data/stories'
 import { dbPut, dbGet, awardBadge } from '@/lib/db'
 import { speak as cloudSpeak, stop as cloudStop, isSpeaking as cloudIsSpeaking } from '@/lib/tts'
 import Confetti from '@/components/Confetti'
+import StoryAnimation from '@/components/StoryAnimation'
 
 export default function StoryDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
@@ -95,6 +96,9 @@ export default function StoryDetail({ params }: { params: Promise<{ id: string }
       </div>
 
       <div style={{ padding: '20px' }}>
+        {/* Story Animation */}
+        <StoryAnimation storyId={id} />
+
         {/* TTS Controls */}
         <div style={{ display: 'flex', gap: '8px', marginBottom: '20px' }}>
           <button className="btn btn-primary btn-sm" style={{ flex: 1 }} onClick={speakAll}>
