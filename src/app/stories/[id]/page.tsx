@@ -1,8 +1,9 @@
 'use client'
-import { useState, useEffect, use } from 'react'
+import { useState, useEffect, useRef, use } from 'react'
 import { useRouter } from 'next/navigation'
 import { stories } from '@/data/stories'
 import { dbPut, dbGet, awardBadge } from '@/lib/db'
+import { speak as cloudSpeak, stop as cloudStop, isSpeaking as cloudIsSpeaking } from '@/lib/tts'
 import Confetti from '@/components/Confetti'
 
 export default function StoryDetail({ params }: { params: Promise<{ id: string }> }) {
@@ -13,6 +14,7 @@ export default function StoryDetail({ params }: { params: Promise<{ id: string }
   const [completed, setCompleted] = useState(false)
   const [showConfetti, setShowConfetti] = useState(false)
   const [speaking, setSpeaking] = useState(false)
+  const speakingRef = useRef(false)
   const [currentParagraph, setCurrentParagraph] = useState(-1)
 
   useEffect(() => {
@@ -33,41 +35,44 @@ export default function StoryDetail({ params }: { params: Promise<{ id: string }
     if (all.length >= stories.length) await awardBadge('all-stories')
   }
 
-  const speakText = (text: string, index: number) => {
-    if (speaking) {
-      speechSynthesis.cancel()
+  const speakText = async (text: string, index: number) => {
+    if (speakingRef.current) {
+      cloudStop()
+      speakingRef.current = false
       setSpeaking(false)
       setCurrentParagraph(-1)
       return
     }
-    const utter = new SpeechSynthesisUtterance(text)
-    utter.lang = 'ko-KR'
-    utter.rate = 0.85
-    utter.pitch = 1.1
-    utter.onstart = () => { setSpeaking(true); setCurrentParagraph(index) }
-    utter.onend = () => { setSpeaking(false); setCurrentParagraph(-1) }
-    speechSynthesis.speak(utter)
+    speakingRef.current = true
+    setSpeaking(true)
+    setCurrentParagraph(index)
+    await cloudSpeak(text, () => {
+      speakingRef.current = false
+      setSpeaking(false)
+      setCurrentParagraph(-1)
+    })
   }
 
-  const speakAll = () => {
-    if (speaking) {
-      speechSynthesis.cancel()
+  const speakAll = async () => {
+    if (speakingRef.current) {
+      cloudStop()
+      speakingRef.current = false
       setSpeaking(false)
       setCurrentParagraph(-1)
       return
     }
+    speakingRef.current = true
     setSpeaking(true)
-    story.paragraphs.forEach((p, i) => {
-      const utter = new SpeechSynthesisUtterance(p)
-      utter.lang = 'ko-KR'
-      utter.rate = 0.85
-      utter.pitch = 1.1
-      utter.onstart = () => setCurrentParagraph(i)
-      if (i === story.paragraphs.length - 1) {
-        utter.onend = () => { setSpeaking(false); setCurrentParagraph(-1) }
-      }
-      speechSynthesis.speak(utter)
-    })
+    for (let i = 0; i < story.paragraphs.length; i++) {
+      if (!speakingRef.current) break
+      setCurrentParagraph(i)
+      await new Promise<void>(resolve => {
+        cloudSpeak(story.paragraphs[i], resolve)
+      })
+    }
+    speakingRef.current = false
+    setSpeaking(false)
+    setCurrentParagraph(-1)
   }
 
   const prevStory = storyIndex > 0 ? stories[storyIndex - 1] : null
