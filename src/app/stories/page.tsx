@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { stories } from '@/data/stories'
 import { dbGetAll } from '@/lib/db'
 import { playTap } from '@/lib/sounds'
@@ -39,8 +40,11 @@ export default function StoriesPage() {
                 className={`card card-story ${readIds.has(story.id) ? 'completed' : ''} animate-fadeInUp`}
                 style={{ display: 'flex', gap: '14px', alignItems: 'center', animationDelay: `${i * 0.05}s`, opacity: 0 }}
               >
-                <div className="emoji-icon" style={{ background: readIds.has(story.id) ? 'var(--mint-soft)' : 'var(--gold-soft)', flexShrink: 0 }}>
-                  {readIds.has(story.id) ? '✅' : story.emoji}
+                <div style={{ position: 'relative', width: '56px', height: '56px', borderRadius: '14px', overflow: 'hidden', flexShrink: 0 }}>
+                  <Image src={`/images/stories/${story.id}.png`} alt="" fill style={{ objectFit: 'cover' }} />
+                  {readIds.has(story.id) && (
+                    <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px' }}>✅</div>
+                  )}
                 </div>
                 <div style={{ flex: 1 }}>
                   <h3 style={{ fontSize: '17px', fontWeight: 700 }}>{story.title}</h3>
@@ -60,8 +64,11 @@ export default function StoriesPage() {
                 className={`card card-story ${readIds.has(story.id) ? 'completed' : ''} animate-fadeInUp`}
                 style={{ display: 'flex', gap: '14px', alignItems: 'center', animationDelay: `${(i + otStories.length) * 0.05}s`, opacity: 0 }}
               >
-                <div className="emoji-icon" style={{ background: readIds.has(story.id) ? 'var(--mint-soft)' : 'var(--gold-soft)', flexShrink: 0 }}>
-                  {readIds.has(story.id) ? '✅' : story.emoji}
+                <div style={{ position: 'relative', width: '56px', height: '56px', borderRadius: '14px', overflow: 'hidden', flexShrink: 0 }}>
+                  <Image src={`/images/stories/${story.id}.png`} alt="" fill style={{ objectFit: 'cover' }} />
+                  {readIds.has(story.id) && (
+                    <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px' }}>✅</div>
+                  )}
                 </div>
                 <div style={{ flex: 1 }}>
                   <h3 style={{ fontSize: '17px', fontWeight: 700 }}>{story.title}</h3>
